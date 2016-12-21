@@ -38,23 +38,14 @@ module SpecificHelp
           opts = val[:opts]
           opt.on(opts[:short],opts[:long],opts[:desc]) {disp_help(key)}
         }
-
-        opt.on('--edit','edit help contentsを開く'){edit_help}
-        opt.on('--to_hiki','hikiのformatに変更する'){to_hiki}
-        opt.on('--all','すべてのhelp画面を表示させる'){all_help}
-        opt.on('--store [item]','store [item] でback upをとる'){|item| store(item)}
-        opt.on('--remove [item]','remove [item] back upしてるlistを消去する'){|item| remove(item) } 
-        opt.on('--add [item]','add new [item]で新しいhelpを作る'){|item| add(item) }
-        opt.on('--backup_list [val]','back upしているlistを表示させる'){|val| backup_list(val)}
-
-#        opt.on('--edit','edit help contents'){edit_help}
-#        opt.on('--to_hiki','convert to hikidoc format'){to_hiki}
-#        opt.on('--all','display all helps'){all_help}
-#        opt.on('--store [item]','store [item] in backfile'){|item| store(item)}
-#        opt.on('--remove [item]','remove [item] and store in backfile'){|item| remove(item) }
-#        opt.on('--add [item]','add new [item]'){|item| add(item) }
-#        opt.on('--backup_list [val]','show last [val] backup list'){|val| backup_list(val)}
-
+        opt.on('--edit','edit help contents'){edit_help}
+        opt.on('--to_hiki','convert to hikidoc format'){to_hiki}
+        opt.on('--all','display all helps'){all_help}
+        opt.on('--store [item]','store [item] in backfile'){|item| store(item)}
+        opt.on('--push', 'push my_todo on remote host'){push}
+        opt.on('--remove [item]','remove [item] and store in backfile'){|item| remove(item) }
+        opt.on('--add [item]','add new [item]'){|item| add(item) }
+        opt.on('--backup_list [val]','show last [val] backup list'){|val| backup_list(val)}
       end
       begin
         command_parser.parse!(@argv)
@@ -106,19 +97,42 @@ module SpecificHelp
         exit
       end
       p store_name = item+"_"+Time.now.strftime("%Y%m%d_%H%M%S")
-      cont = {store_name.to_sym => store_item}
       backup_cont=YAML.load(File.read(backup)) || {}
       backup_cont[store_name.to_sym]=store_item
       File.open(backup,'w'){|file| file.print(YAML.dump(backup_cont))}
     end
+
+
+    def push
+      p "push my_todo"
+      data_dir = File.join(ENV['HOME'],'.my_help')
+      FileUtils.cd(data_dir)
+      system "pwd"
+=begin
+      cont = {store_name.to_sym => store_item}
+      server_info = File.readlines(my_help::SERVER_FILE)
+      p @server_directory = server_info[0].chomp
+      p @user_name = server_info[0].sprit('@')[0]
+      File.open(backup,'a'){file|file.print(YAML.dump(cont))}
+      system ("mkdir .my_help") 
+      p "mkdir .my_help"
+      system ("scp -r /Users/saki/.my_help/my_todo.yml nishitani0:~/.my_help/my_todo.yml")
+      system "exit"
+=end
+#      system "scp -i ~/.ssh/id_rsa my_todo.yml saki@nishitani0:~/.my_help/my_todo.yml"
+      system "scp -r ~/.my_help saki@nishitani0:~"
+      system "ssh saki@nishitani0 ls ~/.my_help" 
+
+
+    end
+
 
     def add(item='new_item')
       print "Trying to add #{item}\n"
       new_item={:opts=>{:short=>'-'+item[0], :long=>'--'+item, :desc=>item},
           :title=>item, :cont=> [item]}
       @help_cont[item.to_sym]=new_item
-      File.open(@source_file,'w'){|file| file.print YAML.dump(@help_cont)}
-    end
+      File.open(@source_file,'w'){|file| file.print YAML.dump(@help_cont)}    end
 
     def remove(item)
       print "Trying to remove #{item}\n"
@@ -128,19 +142,15 @@ module SpecificHelp
     end
 
     def edit_help
-      p help_file =@source_file
-      begin
-        p command= "emacs #{help_file}"
-        exec command
-      rescue => e
-        print "\nOption edit is not executable on windows. \n"
-        print "Type the following shell command;\n\n"
-        print "emacs /home/#{ENV['USER']}/.my_help/#{File.basename(@source_file)}\n\n"
-        print "M-x ruby-mode should be good for edit.\n"
-      end
+      system("emacs #{@source_file}")
     end
 
     def to_hiki
+      #system("uname -n")
+      #name = system("uname -n")
+      #system("name = uname -n")
+      
+     
       @help_cont.each_pair{|key,val|
         if key==:head or key==:license
           hiki_disp(val)
