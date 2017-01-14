@@ -164,17 +164,31 @@ module MyHelp
 
     def hiki
       p 'my_help2hiki'
+#      system "cd"
+#      system "pwd"
+      system "scp -r saki@nishitani0:~/.my_help ~/.my_help2" 
       system "ls ~/.my_help2"
 
-      system "emacs_help --to_hiki > ~/Sites/hiki-1.0/data/text/emacs_help_saki"
-      system "my_todo --to_hiki > ~/Sites/hiki-1.0/data/text/my_todo_saki"
-#      system "ssh_help --to_hiki > ~/Sites/hiki-1.0/data/text/ssh_help_saki"
-      system "open -a safari 'http://localhost/~saki/hiki-1.0/?FrontPage'"
+# --to_hikiでhikiの形式にしたものをコピー
+=begin to_hiki
+  @help_cont.each_pair{|key,val|
+    if key==:head or key==:license
+      hiki_disp(val)
+    else
+      hiki_help(key)
+    end
+  }
+=end
+      system "memo_help --to_hiki>memo_help_saki.hiki"
 
 # FrontPageのまえにそれぞれのhelpのページ作る
 # FrontPageに#[[ ]]を利用してリンクを作る
 # ls .my_help2をFrontPageに書く？
 
+#      system "open -a mi ~/Sites/hiki-1.0/data/text/FrontPage" 
+#      system "hiki -u FrontPage"
+      system "open -a safari 'http://localhost/~saki/hiki-1.0/?FrontPage'"
+   
     end
 
   end

@@ -46,6 +46,7 @@ module SpecificHelp
         opt.on('--remove [item]','remove [item] and store in backfile'){|item| remove(item) }
         opt.on('--add [item]','add new [item]'){|item| add(item) }
         opt.on('--backup_list [val]','show last [val] backup list'){|val| backup_list(val)}
+#        opt.on('--hiki','my_help2hiki'){hiki}
       end
       begin
         command_parser.parse!(@argv)
@@ -120,6 +121,8 @@ module SpecificHelp
       system "exit"
 =end
 #      system "scp -i ~/.ssh/id_rsa my_todo.yml saki@nishitani0:~/.my_help/my_todo.yml"
+      system "rm -rf ~/.my_help/*.yml~"
+#      system "ssh mkdir .my_help"
       system "scp -r ~/.my_help saki@nishitani0:~"
       system "ssh saki@nishitani0 ls ~/.my_help" 
 
@@ -146,11 +149,6 @@ module SpecificHelp
     end
 
     def to_hiki
-      #system("uname -n")
-      #name = system("uname -n")
-      #system("name = uname -n")
-      
-     
       @help_cont.each_pair{|key,val|
         if key==:head or key==:license
           hiki_disp(val)
@@ -199,5 +197,6 @@ module SpecificHelp
     def print_separater
       print "---\n"
     end
+    
   end
 end
