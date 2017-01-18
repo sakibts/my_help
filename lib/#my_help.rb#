@@ -168,12 +168,12 @@ module MyHelp
 
       system "emacs_help --to_hiki > ~/Sites/hiki-1.0/data/text/emacs_help_saki"
       system "my_todo --to_hiki > ~/Sites/hiki-1.0/data/text/my_todo_saki"
-      system "ssh_help --to_hiki > ~/Sites/hiki-1.0/data/text/ssh_help_saki"
+#      system "ssh_help --to_hiki > ~/Sites/hiki-1.0/data/text/ssh_help_saki"
       system "open -a safari 'http://localhost/~saki/hiki-1.0/?FrontPage'"
 
-# FrontPageã®ã¾ãˆã«ãã‚Œãã‚Œã®helpã®ãƒšãƒ¼ã‚¸ä½œã‚‹
-# FrontPageã«#[[ ]]ã‚’åˆ©ç”¨ã—ã¦ãƒªãƒ³ã‚¯ã‚’ä½œã‚‹
-# ls .my_help2ã‚’FrontPageã«æ›¸ãï¼Ÿ
+# FrontPage’¤Î’¤Ş’¤¨’¤Ë’¤½’¤ì’¤¾’¤ì’¤Îhelp’¤Î’¥Ú’¡¼’¥¸’ºî’¤ë
+# FrontPage’¤Ë#[[ ]]’¤ò’Íø’ÍÑ’¤·’¤Æ’¥ê’¥ó’¥¯’¤ò’ºî’¤ë
+# ls .my_help2’¤òFrontPage’¤Ë’½ñ’¤¯’¡©
 
     end
 
